@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="../static/css/login.css">
+	<title>登录</title>
+</head>
+<body style="background-image:url(../static/img/landscape.jpg);">
+<h3><strong>在线数据包异常检测系统</strong></h3>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <form class="form-horizontal" id="login_form", method="post">
+                <span class="heading">用户登录</span>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="userName" placeholder="用户名">
+                    <i class="fa fa-user"></i>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" placeholder="密　码">
+                    <i class="fa fa-lock"></i>
+                    <a href="#" class="fa fa-question-circle"></a>
+                </div>
+
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default" type="submit" onclick="validate()">登&nbsp&nbsp&nbsp&nbsp&nbsp录</button>
+                </div>
+                <span class="register"><a href="register.html">&nbsp注册账号&nbsp&nbsp&nbsp|</a></span>
+                <span class="forget-key"><a href="findKey.html">&nbsp&nbsp忘记密码</a></span>
+            </form>
+        </div>
+    </div>
+    
+</div>
+<h6><strong>2017 Adavanced Computer Network Project</strong>
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="../static/js/jquery-1.11.3.js"></script>
+<script src="../static/js/login.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="../static/js/bootstrap.min.js"></script>
+</body>
+</html>
