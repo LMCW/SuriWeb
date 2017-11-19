@@ -18,7 +18,7 @@ class DataBase:
         self.host='127.0.0.1'
         self.db_name='suriweb'
         self.username='root'
-        self.password='quguoren123@!321'
+        self.password='root'
         self.port=3306
         self.connection=None
         pass
@@ -77,9 +77,11 @@ class DataBase:
             print result
             return result
 
-if __name__=="__main__":
-    c=DataBase()
-    c.config(DB_CONFIG)
-    c.select_all('user')
+database=DataBase()
+database.config(DB_CONFIG)
+#if __name__=="__main__":
+#    c=DataBase()
+#    c.config(DB_CONFIG)
+#    c.select_all('user')
 
 

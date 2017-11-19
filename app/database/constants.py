@@ -11,7 +11,7 @@ DB_CONFIG={
     'url':'127.0.0.1',
     'db_name':'suriweb',
     'username':'root',
-    'password':'quguoren123@!321', #这里数据库的密码需要根据个人情况更改
+    'password':'root', #这里数据库的密码需要根据个人情况更改
     'user_table':'user'   #用户表名
 }
 
