@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>
+  </title>
+  <meta charset="utf-8" />
+  <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/missionList.css">
+</head>
+<body>
+    <nav class="navbar navbar-fixed-top my-navbar" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand  asd" href="index.html">SuriWeb</a>
+            </div>
+            <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="uploadMission.html">上传任务</a></li>
+                    <li class="active"><a href="missionList.html">任务列表</a></li>
+                    <li><a href="developing.html">施工中</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="register.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+     <div class="bg"></div>
+    <br /><br /><br /><br /><br /><br /><br /><p>
+    <script>
+        $(window).scroll(function () {
+            if ($(".navbar").offset().top > 50) {$(".navbar-fixed-top").addClass("top-nav");
+            }else {$(".navbar-fixed-top").removeClass("top-nav");}
+        })</script>
+</body></html>
