@@ -5,6 +5,8 @@ from flask import request
 from flask import redirect
 from flask import render_template
 
+from database.database.py import database
+
 app = Flask(__name__)
 
 @app.route('/')
