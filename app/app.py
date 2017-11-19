@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 from flask import redirect
 from flask import render_template
+from flask import jsonify
 
 from database.database import database
 
@@ -11,7 +12,6 @@ app = Flask(__name__)
 
 def request_to_dict(http_request):
     data_dict = dict(http_request.form)
-    print data_dict
     for key in data_dict.keys():
         data_dict[key] = data_dict[key][0]
     return data_dict
@@ -20,7 +20,6 @@ def request_to_dict(http_request):
 @app.route('/')
 def home():
 	return redirect('/index')
-
 
 @app.route('/login', methods=['POST','GET'])
 def login():
@@ -38,6 +37,7 @@ def login():
 		if not result:
 			# wrong username or password
 			print 'Fails login'
+
 		else:
 			print "Login Successful"
 			return redirect('/index')

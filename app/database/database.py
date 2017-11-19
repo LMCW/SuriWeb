@@ -20,6 +20,7 @@ class DataBase:
         self.username='root'
         self.password='root'
         self.port=3306
+        self.user_table='user'
         self.connection=None
         pass
 
@@ -76,6 +77,8 @@ class DataBase:
             return result
 
     #向数据表插入新的数据
+    #params={'username':"root",'password':"root",'mail':'euyongu.com','info':'hhhhhh'}
+    # insert(database.user_table,params)
     def insert(self,table_name,**params): #params 插入的字典
         cols,args=zip(*params.iteritems())
         for arg in args:
