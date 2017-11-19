@@ -73,15 +73,64 @@ class DataBase:
             cursor.execute('select * from %s'%(table))
             result=cursor.fetchall()
             self.connection.commit()
-
-            print result
             return result
+
+    #向数据表插入新的数据
+    def insert(self,table_name,**params): #params 插入的字典
+        cols,args=zip(*params.iteritems())
+        for arg in args:
+            print 'type of',arg,' is ',type(arg)
+        args=[self.wrap_str(arg) if isinstance(arg,unicode) or isinstance(arg,str) else str(arg) for arg in args]
+        sql = 'insert into `%s` (%s) values (%s)'% (table_name, ','.join(['`%s`' % col for col in cols]), ','.join([arg for arg in args]))
+        if self.connection is None:
+            self.config(DB_CONFIG)
+        with self.connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            try:
+                print '[sql]:',sql
+                cursor.execute(sql)
+                self.connection.commit()
+            except pymysql.IntegrityError:
+                print '[Error] Dumplicate entry'
+
+    #更新数据表的内容
+    def update(self,table_name,item_id,**params):
+        print 'update params ',params
+        sql='update ' +table_name +' set '
+
+        for field,value in params.items():
+            if isinstance(value,str) or isinstance(value,unicode):  #添加双引号
+                value=self.wrap_str(value)
+            sql +=str(field)+'='+str(value)+','
+        sql=sql[:-1]+' where id='+str(item_id)+';'
+        with self.connection.cursor() as cursor:
+            try:
+                print "[sql:]",sql
+                cursor.execute(sql)
+                self.connection.commit()
+            except Exception as e:
+                print '[Error]sql_database Update mission', item_id, ' fails'
+                print e
+    def __block__execute__(self,sql):
+        with self.connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(sql)
+            try:
+                self.connection.commit()
+            finally:
+                thread.exit_thread()
+
+    def execute(self,sql):
+        sql_thread=threading.Thread(target=self.__block__execute__,args=(sql,))
+        sql_thread.start()
+        self.__block__execute__(sql)
 
 database=DataBase()
 database.config(DB_CONFIG)
-#if __name__=="__main__":
-#    c=DataBase()
-#    c.config(DB_CONFIG)
-#    c.select_all('user')
 
+'''
+if __name__=="__main__":
+    c=DataBase()
+    c.config(DB_CONFIG)
+    arg={'username':'wuyy56','password':'wuyy'}
+    c.update('user',4,**arg)
+'''
 
