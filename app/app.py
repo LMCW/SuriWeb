@@ -5,10 +5,12 @@ from flask import request
 from flask import redirect
 from flask import render_template
 from flask import jsonify
+from flask import session
 
 from database.database import database
 
 app = Flask(__name__)
+app.secret_key = 'Xa\r5\xfd\xe0\x84\x81)lfDCJ.a\xc2\x01\x1bn0\xef\x01\xc8'
 
 def request_to_dict(http_request):
     data_dict = dict(http_request.form)
@@ -21,6 +23,17 @@ def request_to_dict(http_request):
 def home():
 	return redirect('/index')
 
+# login Fail
+@app.route('/login_fail')
+def login_fail():
+	str =""
+	if 'login' in session:
+		if session['login'] == 0:
+			str = "Wrong username or password"
+			print str
+	return jsonify(result = str)
+
+# login
 @app.route('/login', methods=['POST','GET'])
 def login():
 	error = None
@@ -37,9 +50,11 @@ def login():
 		if not result:
 			# wrong username or password
 			print 'Fails login'
+			session['login'] = 0
 
 		else:
 			print "Login Successful"
+			session['login'] = 1
 			return redirect('/index')
 
 	return render_template('login.html')

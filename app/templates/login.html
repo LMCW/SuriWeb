@@ -32,8 +32,10 @@
                 <span class="register"><a href="register.html">&nbsp注册账号&nbsp&nbsp&nbsp|</a></span>
                 <span class="forget-key"><a href="findKey.html">&nbsp&nbsp忘记密码</a></span>
             </form>
+            <span class="login-fail" id="login_result"><strong></strong></span>
         </div>
     </div>
+
     
 </div>
 <h6><strong>2017 Adavanced Computer Network Project</strong>
@@ -44,5 +46,8 @@
 <script src="../static/js/login.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 </body>
 </html>
