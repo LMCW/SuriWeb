@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-	return redirect('/login')
+	return redirect('/index')
 
 @app.route('/login', methods=['POST','GET'])
 def login():
