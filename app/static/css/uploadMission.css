@@ -1,16 +1,30 @@
 html, body {width:100%;height:100%;} /*非常重要的样式让背景图片100%适应整个屏幕*/
 
 .bg {
+	position:relative;
 	display: table;
 	width: 100%;
 	height: 120%;
 	padding: 100px 0;
 	text-align: center;
 	color: #fff;background: 
-	url(../img/keji.jpg) no-repeat bottom center;
+	url(../img/uploadMission/bg1.jpg) no-repeat bottom center;
 	background-color: #000;
 	background-size: 
 	cover;
+}
+
+.div1 {
+	position:absolute;
+	top:21%;
+	left:33%;
+	right:34%;
+}
+.div2 {
+	position:absolute;
+	top:41%;
+	left:34%;
+	right:29%;
 }
 
 .my-navbar {
