@@ -9,7 +9,7 @@ function validate(){
 	}
 	else{
         $.getJSON($SCRIPT_ROOT + '/login_fail', function(data) {
-			alert("Wrong username or password!")
+			// alert("Wrong username or password!")
       	});
 
 	}

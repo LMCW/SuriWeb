@@ -11,6 +11,7 @@ from flask import redirect
 from flask import render_template
 from flask import jsonify
 from flask import session
+from flask import flash
 
 from database.database import database
 
@@ -55,6 +56,7 @@ def login():
 		if not result:
 			# wrong username or password
 			print 'Fails login'
+			flash("Wrong password")
 			session['login'] = 0
 
 		else:
@@ -78,6 +80,10 @@ def register():
         else:
            print "failed register"
     return render_template('register.html')
+
+@app.route('/uploadMission')
+def upload():
+	return render_template('uploadMission.html')
 
 
 if __name__ == '__main__':
