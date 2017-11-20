@@ -20,11 +20,7 @@ class DataBase:
         self.username='root'
         self.password='root'
         self.port=3306
-<<<<<<< HEAD
-        self.user_table=''
-=======
         self.user_table='user'
->>>>>>> 5a537744c7010e6d5f110e88ec869fdc6c7c9618
         self.connection=None
         pass
 
@@ -82,14 +78,8 @@ class DataBase:
             return result
 
     #向数据表插入新的数据
-<<<<<<< HEAD
     # arg={'username':'wuyy78','password':'wuyy78','mail':'wuyy@126.com','info':'清华大学'}
     #database.insert(c.user_table,**arg)  这是示例
-
-=======
-    #params={'username':"root",'password':"root",'mail':'euyongu.com','info':'hhhhhh'}
-    # insert(database.user_table,params)
->>>>>>> 5a537744c7010e6d5f110e88ec869fdc6c7c9618
     def insert(self,table_name,**params): #params 插入的字典
         cols,args=zip(*params.iteritems())
         for arg in args:

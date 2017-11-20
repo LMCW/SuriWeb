@@ -68,7 +68,6 @@ def login():
 def index():
 	return render_template('index.html')
 
-<<<<<<< HEAD
 @app.route('/register' ,methods=['POST','GET'])
 def register():
     if request.method == 'POST':
@@ -79,30 +78,7 @@ def register():
         else:
            print "failed register"
     return render_template('register.html')
-=======
-# register
-@app.route('/register',methods=['POST','GET'])
-def register():
-	error = None
-	if request.method == 'POST':
-		data = request_to_dict(request)
-		username = data['rname']
-		password = data['rpassword']
-		mail = data['rmail']
-		info = data['rinfo']
-		#print username
-		#print password
-		#print mail
-		#print info
 
-		# Add these new infomation to the database
-		params = {'username':username, 'password':password, 'mail':mail, 'info':info}
-		print params
-		database.insert(database.user_table , params)
-		return render_template('login.html')
-
-	return render_template('register.html')
->>>>>>> 5a537744c7010e6d5f110e88ec869fdc6c7c9618
 
 if __name__ == '__main__':
 	app.run(debug=True)
