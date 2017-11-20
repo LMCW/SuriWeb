@@ -1,20 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
--- http://www.phpmyadmin.net
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 2017-11-20 04:50:37
--- 服务器版本： 5.6.17
--- PHP Version: 5.5.12
+-- Host: 127.0.0.1:3306
+-- Generation Time: 2017-11-20 13:06:40
+-- 服务器版本： 5.7.19
+-- PHP Version: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `suriweb`
@@ -26,6 +28,7 @@ SET time_zone = "+00:00";
 -- 表的结构 `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户的ID',
   `username` varchar(50) CHARACTER SET utf8 DEFAULT NULL COMMENT '用户名',
@@ -33,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mail` varchar(30) DEFAULT NULL COMMENT '邮箱',
   `info` text COMMENT '个人简介',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='用户名登录和注册' AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='用户名登录和注册';
 
 --
 -- 转存表中的数据 `user`
@@ -41,16 +44,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `username`, `password`, `mail`, `info`) VALUES
 (1, 'root', 'root', NULL, NULL),
-(2, 'wuyy3', 'wuyy', NULL, NULL),
-(3, 'wuyy3', 'wuyy', NULL, NULL),
-(4, 'wuyy78', 'wuyy78', NULL, NULL),
-(5, 'wuyy78', 'wuyy78', NULL, NULL),
-(6, 'wuyy78', 'wuyy78', 'wuyy@126.com', '清华大学'),
-(7, 'hello', 'de', 'adaas', 'ed'),
-(8, 'gr', 'gr', 'sgs', 'csd'),
-(9, 'wuyy758', 'wuyy758', 'wuyy@126.com', '清华大学'),
-(10, 'das', 'ds', 'ds', 'ds'),
-(11, 'ds', 'ds', 'ds', '哈哈');
+(2, 'wuyy78', 'wuyy78', 'wuyy@126.com', '清华大学'),
+(3, 'wuyy758', 'wuyy758', 'wuyy@126.com', '清华大学');
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
