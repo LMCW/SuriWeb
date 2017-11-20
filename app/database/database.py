@@ -20,12 +20,13 @@ class DataBase:
         self.username='root'
         self.password='root'
         self.port=3306
+        self.user_table=''
         self.connection=None
         pass
 
 
     @classmethod
-    def wrap_str(cls, raw_str):    #把"  换成\
+    def wrap_str(self, raw_str):    #把"  换成\
         return '"' + str(raw_str).replace('"', '\'') + '"'
 
     #设置数据库的内容
@@ -34,6 +35,7 @@ class DataBase:
         self.db_name = config_dict['db_name']
         self.username = config_dict['username']
         self.password = config_dict['password']
+        self.user_table=config_dict['user_table']
         self.host, port = urllib.splitport(str(config_dict['url']))
         try:
             self.port = int(port)
@@ -76,12 +78,16 @@ class DataBase:
             return result
 
     #向数据表插入新的数据
+    # arg={'username':'wuyy78','password':'wuyy78','mail':'wuyy@126.com','info':'清华大学'}
+    #database.insert(c.user_table,**arg)  这是示例
+
     def insert(self,table_name,**params): #params 插入的字典
         cols,args=zip(*params.iteritems())
         for arg in args:
             print 'type of',arg,' is ',type(arg)
         args=[self.wrap_str(arg) if isinstance(arg,unicode) or isinstance(arg,str) else str(arg) for arg in args]
         sql = 'insert into `%s` (%s) values (%s)'% (table_name, ','.join(['`%s`' % col for col in cols]), ','.join([arg for arg in args]))
+
         if self.connection is None:
             self.config(DB_CONFIG)
         with self.connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -89,8 +95,10 @@ class DataBase:
                 print '[sql]:',sql
                 cursor.execute(sql)
                 self.connection.commit()
+                return True
             except pymysql.IntegrityError:
                 print '[Error] Dumplicate entry'
+                return False
 
     #更新数据表的内容
     def update(self,table_name,item_id,**params):
@@ -130,7 +138,10 @@ database.config(DB_CONFIG)
 if __name__=="__main__":
     c=DataBase()
     c.config(DB_CONFIG)
-    arg={'username':'wuyy56','password':'wuyy'}
-    c.update('user',4,**arg)
+    arg={'username':'wuyy758','password':'wuyy758','mail':'wuyy@126.com','info':'清华大学'}
+    c.insert(c.user_table,**arg)
+    #c.update('user',4,**arg)
+
 '''
+
 

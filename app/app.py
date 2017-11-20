@@ -1,4 +1,9 @@
+#coding: utf-8
 import os
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')  #Python自然调用ascii编码解码程序去处理字符流，当字符流不属于ascii范围内，就会抛出异常,所以python 默认编码改为utf-8
+
 
 from flask import Flask
 from flask import request
@@ -48,9 +53,16 @@ def login():
 def index():
 	return render_template('index.html')
 
-@app.route('/register')
+@app.route('/register' ,methods=['POST','GET'])
 def register():
-	return render_template('register.html')
+    if request.method == 'POST':
+        data=request_to_dict(request)
+        arg2={'username':data['rname'],'password':data['rpassword'],'mail':data['rmail'],'info':data['rinfo']}
+        if database.insert(database.user_table,**arg2):
+            print "succeed register"
+        else:
+           print "failed register"
+    return render_template('register.html')
 
 if __name__ == '__main__':
 	app.run(debug=True)
