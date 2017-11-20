@@ -1,6 +1,5 @@
 function validate(){
 	// alert(document.getElementById("userName").value) 用这种方式来根据id获取值，注意最后的.value
-	
 	if (document.getElementById("userName").value == ""){
 		alert("You must enter your userName.");
 		return false;
@@ -9,7 +8,10 @@ function validate(){
 		return false;
 	}
 	else{
-		return true;
-		
+        $.getJSON($SCRIPT_ROOT + '/login_fail', function(data) {
+			alert("Wrong username or password!")
+      	});
+
 	}
+
 }
