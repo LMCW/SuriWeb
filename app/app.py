@@ -12,11 +12,42 @@ from flask import render_template
 from flask import jsonify
 from flask import session
 from flask import flash
-
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user
+from flask_login import UserMixin
 from database.database import database
 
 app = Flask(__name__)
 app.secret_key = 'Xa\r5\xfd\xe0\x84\x81)lfDCJ.a\xc2\x01\x1bn0\xef\x01\xc8'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost/suriweb'
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.session_protection = 'basic'
+login_manager.init_app(app)
+
+
+class User(db.Model, UserMixin):
+	__tablename__='user'
+	id = db.Column(db.Integer, primary_key=True)
+	mail = db.Column(db.String(64),index=True)
+	username = db.Column(db.String(64),unique=True, index=True)
+	password = db.Column(db.String(28))
+	info = db.Column(db.String(255))
+
+	def confirm_password(self, p):
+		if p==self.password:
+			return True
+		else:
+			return False
+
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.filter_by(id=user_id).first()
+
+
 
 def request_to_dict(http_request):
     data_dict = dict(http_request.form)
@@ -39,21 +70,17 @@ def login():
 		data=request_to_dict(request)
 		username = data['username']
 		password = data['password']
-
+		
+		user = User.query.filter_by(username=username).first()
 		# check if these infomation are correct in the database
-		result=database.select_by_id("select * from user where username='%s' and password='%s'"%(username,password))
-		#result=database.select_all('user')
-		if not result:
+		if user is not None and user.confirm_password(password):
+			print "Login Successful"
+			login_user(user,True)
+			return redirect('/index')
+		else:
 			# wrong username or password
 			print 'Fails login'
 			flash("Wrong password")
-			session['login'] = 0
-
-		else:
-			print "Login Successful"
-			session['login'] = 1
-			return redirect('/index')
-
 	return render_template('login.html')
 
 @app.route('/index')
