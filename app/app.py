@@ -29,16 +29,6 @@ def request_to_dict(http_request):
 def home():
 	return redirect('/index')
 
-# login Fail
-@app.route('/login_fail')
-def login_fail():
-	str =""
-	if 'login' in session:
-		if session['login'] == 0:
-			str = "Wrong username or password"
-			print str
-	return jsonify(result = str)
-
 # login
 @app.route('/login', methods=['POST','GET'])
 def login():
