@@ -1,5 +1,6 @@
 #Virtual environment
 venv
+*.swp
 .DS_Store
 *.py[cod]
 *.so
