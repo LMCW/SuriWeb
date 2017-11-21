@@ -13,7 +13,7 @@ from flask import jsonify
 from flask import session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, logout_user
 from flask_login import UserMixin
 from database.database import database
 
@@ -101,6 +101,11 @@ def register():
 @app.route('/uploadMission')
 def upload():
 	return render_template('uploadMission.html')
+
+@app.route('/logout')
+def logout():
+	logout_user()
+	return redirect('/index')
 
 
 if __name__ == '__main__':
