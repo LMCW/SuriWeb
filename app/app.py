@@ -73,9 +73,11 @@ def login():
 		password = data['password']
 
 		user = User.query.filter_by(username=username).first()
+		'''
 		print User.query.all()
 		for i in User.query.all():
 			print i.username
+		'''
 		# check if these infomation are correct in the database
 		if user is not None and user.confirm_password(password):
 			print "Login Successful"
