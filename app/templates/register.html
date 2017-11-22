@@ -24,6 +24,11 @@
 		                        	<div class="form-top">
 		                        		<div class="form-top-left">
 		                            		<p>请填写您的账户信息：</p>
+		                            		<p>
+							                    {% for message in get_flashed_messages() %}  
+							                    {{ message }}  
+							                    {% endfor %}
+							                </p>
 		                        		</div>
 		                        		<div class="form-top-right">
 		                        			<i class="fa fa-user"></i>

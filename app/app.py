@@ -1,6 +1,7 @@
 #coding: utf-8
 import os
 import sys
+import re
 reload(sys)
 sys.setdefaultencoding('utf-8')  #Python自然调用ascii编码解码程序去处理字符流，当字符流不属于ascii范围内，就会抛出异常,所以python 默认编码改为utf-8
 
@@ -32,9 +33,9 @@ login_manager.init_app(app)
 class User(db.Model, UserMixin):
 	__tablename__='user'
 	id = db.Column(db.Integer, primary_key=True)
-	mail = db.Column(db.String(64),index=True)
 	username = db.Column(db.String(64),unique=True, index=True)
 	password = db.Column(db.String(28))
+	mail = db.Column(db.String(64),index=True)
 	info = db.Column(db.String(255))
 
 	def confirm_password(self, p):
@@ -70,8 +71,11 @@ def login():
 		data=request_to_dict(request)
 		username = data['username']
 		password = data['password']
-		
+
 		user = User.query.filter_by(username=username).first()
+		print User.query.all()
+		for i in User.query.all():
+			print i.username
 		# check if these infomation are correct in the database
 		if user is not None and user.confirm_password(password):
 			print "Login Successful"
@@ -90,12 +94,44 @@ def index():
 @app.route('/register' ,methods=['POST','GET'])
 def register():
     if request.method == 'POST':
+    	data=request_to_dict(request)
+    	# 设定不允许出现重复username
+    	flag = True
+    	for i in User.query.all():
+    		if i.username == data['rname']:
+    			flag = False
+    			break
+    	# print flag
+    	if flag == False:
+    		print "the username has been registered, register fail"
+    		# flash 重复用户名处理
+    		flash("The username has been registered")
+    		return render_template('register.html')
+    	else:
+    		# 判断邮箱是否合法
+    		if len(data['rmail']) > 7:
+    			if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", data['rmail']) != None:
+					# 在数据库中id递增，因此新加入的用户的id为usertable的size+1
+		    		newUser = User(id = len(User.query.all()) + 1, username = data['rname'], password = data['rpassword'], mail = data['rmail'], info = data['rinfo'])
+		        	db.session.add(newUser)
+		        	db.session.commit() 
+		        	print "register successfully"
+		        	return render_template('login.html')
+	        	else:
+	        		print "invalid mailaddress, register fail"
+	        		flash("Invalid mail address")
+    		else:
+    			flash("Invalid mail address")
+
+    	'''  原来的写法
         data=request_to_dict(request)
         arg2={'username':data['rname'],'password':data['rpassword'],'mail':data['rmail'],'info':data['rinfo']}
         if database.insert(database.user_table,**arg2):
             print "succeed register"
         else:
            print "failed register"
+        '''
+    print "register fail"
     return render_template('register.html')
 
 @app.route('/uploadMission')
