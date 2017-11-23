@@ -118,14 +118,15 @@ def upload():
     f.save(temp)
 
     #创建 by wuyy
-    '''
+
     # (1)上传文件插入数据库
-    t=Task(userId=current_user.user.id,isCompleted=1,beginTime=int(time.time()),endTime=1,resultPath='/result/')
+    path = basedir + '\\result\\' + str(current_user.username) + '\\'
+    t=Task(userId = current_user.id,isCompleted = 0, beginTime = int(time.time()), endTime = 0, resultPath=path)
     db.session.add(t)
     db.session.commit()
-    '''
+
     # (2)通过用户名查找对应的任务,存储在result 字典里面
-    task = Task.query.filter_by(userId=1).all()
+    task = Task.query.filter_by(userId=current_user.id).all()
     result={}
     for x in task:
         A={}
@@ -139,7 +140,7 @@ def upload():
 
     '''
     # (3)删除任务，根据任务ID
-    dt=Task.query.filter_by(id=4).first()
+    dt=Task.query.filter_by(id=5).first()
     db.session.delete(dt)
     db.session.commit()
     '''
