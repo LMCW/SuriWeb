@@ -21,6 +21,7 @@ from database.database import database
 
 #initialization of app
 app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
 app.secret_key = 'Xa\r5\xfd\xe0\x84\x81)lfDCJ.a\xc2\x01\x1bn0\xef\x01\xc8'
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost/suriweb'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
@@ -96,6 +97,16 @@ def login():
 			flash("Wrong password")
 	return render_template('login.html')
 
+
+
+@app.route('/upload', methods=['POST','GET'])
+def upload():
+	f = request.files['uploadfile']
+	temp = basedir+'\\'+f.filename
+	print temp
+	f.save(temp)
+	return redirect('/uploadMission')
+
 @app.route('/index')
 def index():
 	return render_template('index.html')
@@ -145,13 +156,19 @@ def register():
 
 @app.route('/uploadMission')
 @login_required
-def upload():
+def uploadMission():
 	return render_template('uploadMission.html')
 
 @app.route('/missionList')
 @login_required
 def missionList():
 	return render_template('missionList.html')
+
+
+@app.route('/developing')
+def developing():
+	return render_template('developing.html')
+
 
 @app.route('/logout')
 @login_required
