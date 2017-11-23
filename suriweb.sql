@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: 2017-11-22 11:58:30
+-- Generation Time: 2017-11-23 11:42:24
 -- 服务器版本： 5.7.19
 -- PHP Version: 5.6.31
 
@@ -21,6 +21,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `suriweb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `task`
+--
+
+DROP TABLE IF EXISTS `task`;
+CREATE TABLE IF NOT EXISTS `task` (
+  `id` int(100) NOT NULL AUTO_INCREMENT COMMENT 'task的id',
+  `userId` int(100) DEFAULT NULL COMMENT '用户ID',
+  `isCompleted` tinyint(4) DEFAULT NULL COMMENT '任务完成状态',
+  `beginTime` int(100) DEFAULT NULL COMMENT '任务开始时间',
+  `endTime` int(100) DEFAULT NULL COMMENT '任务结束时间',
+  `resultPath` varchar(200) DEFAULT NULL COMMENT '存储结果的路径 /result/username/',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `task`
+--
+
+INSERT INTO `task` (`id`, `userId`, `isCompleted`, `beginTime`, `endTime`, `resultPath`) VALUES
+(1, 1, 0, 1243, 14135351, NULL);
 
 -- --------------------------------------------------------
 

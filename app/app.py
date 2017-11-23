@@ -52,6 +52,14 @@ class User(db.Model, UserMixin):
 		else:
 			return False
 
+''' YY 补充
+class Task(db.Model):
+	__tablename__='task'
+	id = db.Column(db.Integer, primary_key=True)
+	userId = db.Column(db.Integer)
+	# ..
+'''
+
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.filter_by(id=user_id).first()
