@@ -148,6 +148,11 @@ def register():
 def upload():
 	return render_template('uploadMission.html')
 
+@app.route('/missionList')
+@login_required
+def missionList():
+	return render_template('missionList.html')
+
 @app.route('/logout')
 @login_required
 def logout():
