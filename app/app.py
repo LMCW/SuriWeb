@@ -2,6 +2,7 @@
 import os
 import sys
 import re
+from datetime import datetime, timedelta
 reload(sys)
 sys.setdefaultencoding('utf-8')  #Python自然调用ascii编码解码程序去处理字符流，当字符流不属于ascii范围内，就会抛出异常,所以python 默认编码改为utf-8
 
@@ -18,16 +19,21 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_login import UserMixin
 from database.database import database
 
+#initialization of app
 app = Flask(__name__)
 app.secret_key = 'Xa\r5\xfd\xe0\x84\x81)lfDCJ.a\xc2\x01\x1bn0\xef\x01\xc8'
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost/suriweb'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+#initialization of database
 db = SQLAlchemy(app)
 
+#initialization of login manager
 login_manager = LoginManager()
 login_manager.session_protection = 'basic'
 login_manager.login_view = 'login'
+login_manager.remember_cookie_duration = timedelta(days=1)
 login_manager.init_app(app)
 
 
@@ -151,3 +157,4 @@ def logout():
 
 if __name__ == '__main__':
 	app.run(debug=True)
+
