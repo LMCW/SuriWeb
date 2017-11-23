@@ -6,7 +6,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')  #Python自然调用ascii编码解码程序去处理字符流，当字符流不属于ascii范围内，就会抛出异常,所以python 默认编码改为utf-8
 
 
-from flask import Flask
+from flask import Flask, Blueprint
 from flask import request
 from flask import redirect
 from flask import render_template
@@ -14,7 +14,7 @@ from flask import jsonify
 from flask import session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user
+from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_login import UserMixin
 from database.database import database
 
@@ -27,6 +27,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.session_protection = 'basic'
+login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 
@@ -137,10 +138,12 @@ def register():
     return render_template('register.html')
 
 @app.route('/uploadMission')
+@login_required
 def upload():
 	return render_template('uploadMission.html')
 
 @app.route('/logout')
+@login_required
 def logout():
 	logout_user()
 	return redirect('/index')
