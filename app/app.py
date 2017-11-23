@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 reload(sys)
 sys.setdefaultencoding('utf-8')  #Python自然调用ascii编码解码程序去处理字符流，当字符流不属于ascii范围内，就会抛出异常,所以python 默认编码改为utf-8
 
-
+import time
 from flask import Flask, Blueprint
 from flask import request
 from flask import redirect
@@ -53,13 +53,15 @@ class User(db.Model, UserMixin):
 		else:
 			return False
 
-''' YY 补充
+
 class Task(db.Model):
-	__tablename__='task'
-	id = db.Column(db.Integer, primary_key=True)
-	userId = db.Column(db.Integer)
-	# ..
-'''
+    __tablename__='task'
+    id = db.Column(db.Integer, primary_key=True)
+    userId = db.Column(db.Integer)
+    isCompleted=db.Column(db.Integer)
+    beginTime=db.Column(db.Integer)
+    endTime=db.Column(db.Integer)
+    resultPath=db.Column(db.String(200))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -110,13 +112,38 @@ def login():
 
 @app.route('/upload', methods=['POST','GET'])
 def upload():
-	f = request.files['uploadfile']
-	temp = basedir+'\\'+f.filename
-	print temp
-	f.save(temp)
-	print current_user.username
-	print current_user.id
-	return redirect('/uploadMission')
+    f = request.files['uploadfile']
+    temp = basedir+'\\'+f.filename
+    print temp
+    f.save(temp)
+
+    #创建 by wuyy
+    '''
+    # (1)上传文件插入数据库
+    t=Task(userId=current_user.user.id,isCompleted=1,beginTime=int(time.time()),endTime=1,resultPath='/result/')
+    db.session.add(t)
+    db.session.commit()
+    '''
+    # (2)通过用户名查找对应的任务,存储在result 字典里面
+    task = Task.query.filter_by(userId=1).all()
+    result={}
+    for x in task:
+        A={}
+        A['userId']=x.userId
+        A['isCompleted']=x.isCompleted
+        A['beginTime']=x.beginTime
+        A['endTime']=x.endTime
+        A['resultPath']=x.resultPath
+        result[x.id]=A
+    print result
+
+    '''
+    # (3)删除任务，根据任务ID
+    dt=Task.query.filter_by(id=4).first()
+    db.session.delete(dt)
+    db.session.commit()
+    '''
+    return redirect('/uploadMission')
 
 @app.route('/index')
 def index():
