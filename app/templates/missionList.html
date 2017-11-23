@@ -22,8 +22,18 @@
                     <li><a href="developing">施工中</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                   {% if current_user.is_authenticated %}
+                    <li><a><span class="glyphicon glyphicon-user"></span>
+                      Hi,{{current_user.username}}
+                    </a>
+                    </li>
+                    <li>
+                      <a href="logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a>
+                    </li>
+                  {% else %}
                     <li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
                     <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                  {% endif %}
                 </ul>
             </div>
         </div>
