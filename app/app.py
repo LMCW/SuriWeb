@@ -108,7 +108,7 @@ def register():
     		print "the username has been registered, register fail"
     		# flash 重复用户名处理
     		flash("The username has been registered")
-    		return render_template('register.html')
+    		return redirect('/register')
     	else:
     		# 判断邮箱是否合法
     		if len(data['rmail']) > 7:
@@ -118,7 +118,7 @@ def register():
 		        	db.session.add(newUser)
 		        	db.session.commit() 
 		        	print "register successfully"
-		        	return render_template('login.html')
+		        	return redirect('/login')
 	        	else:
 	        		print "invalid mailaddress, register fail"
 	        		flash("Invalid mail address")
