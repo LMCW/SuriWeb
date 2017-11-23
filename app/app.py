@@ -17,6 +17,7 @@ from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_login import UserMixin
+from flask_login import current_user
 from database.database import database
 
 #initialization of app
@@ -113,6 +114,8 @@ def upload():
 	temp = basedir+'\\'+f.filename
 	print temp
 	f.save(temp)
+	print current_user.username
+	print current_user.id
 	return redirect('/uploadMission')
 
 @app.route('/index')
