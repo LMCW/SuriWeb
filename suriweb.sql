@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: 2017-11-23 11:42:24
+-- Generation Time: 2017-12-06 08:19:00
 -- 服务器版本： 5.7.19
 -- PHP Version: 5.6.31
 
@@ -37,14 +37,20 @@ CREATE TABLE IF NOT EXISTS `task` (
   `endTime` int(100) DEFAULT NULL COMMENT '任务结束时间',
   `resultPath` varchar(200) DEFAULT NULL COMMENT '存储结果的路径 /result/username/',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `task`
 --
 
 INSERT INTO `task` (`id`, `userId`, `isCompleted`, `beginTime`, `endTime`, `resultPath`) VALUES
-(1, 1, 0, 1243, 14135351, NULL);
+(1, 1, 0, 1243, 14135351, NULL),
+(4, 8, 0, 1512546725, 0, 'C:\\Users\\winsen\\Desktop\\SuriWeb\\app\\result\\winsen\\'),
+(7, 8, 0, 1512546832, 0, 'C:\\Users\\winsen\\Desktop\\SuriWeb\\app\\result\\winsen\\'),
+(6, 8, 0, 1512546819, 0, 'C:\\Users\\winsen\\Desktop\\SuriWeb\\app\\result\\winsen\\'),
+(8, 8, 0, 1512547225, 0, 'C:\\Users\\winsen\\Desktop\\SuriWeb\\app\\result\\winsen\\'),
+(9, 8, 0, 1512547258, 0, 'C:\\Users\\winsen\\Desktop\\SuriWeb\\app\\result\\winsen\\'),
+(10, 1, 0, 1512547338, 0, 'C:\\Users\\winsen\\Desktop\\SuriWeb\\app\\result\\root\\');
 
 -- --------------------------------------------------------
 
@@ -60,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mail` varchar(30) DEFAULT NULL COMMENT '邮箱',
   `info` text COMMENT '个人简介',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='用户名登录和注册';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='用户名登录和注册';
 
 --
 -- 转存表中的数据 `user`
@@ -73,7 +79,8 @@ INSERT INTO `user` (`id`, `username`, `password`, `mail`, `info`) VALUES
 (4, 'liuzf13', 'test', 'liuzf13@163.com', 'register test'),
 (5, 'liuzf2', 'test', 'liuzf13@163.com', 'register test2'),
 (6, 'liuzf3', 'test', 'liuzf13@163.com', 'test for mial address'),
-(7, 'liuzf5', 'test', 'liuzf13@mails.tsinghua.edu.cn', 'test for register');
+(7, 'liuzf5', 'test', 'liuzf13@mails.tsinghua.edu.cn', 'test for register'),
+(8, 'winsen', 'winsen', 'winsen@123.com', 'winsen\r\n');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

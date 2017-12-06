@@ -113,10 +113,8 @@ def login():
 @app.route('/upload', methods=['POST','GET'])
 def upload():
     f = request.files['uploadfile']
-    temp = basedir+'\\'+f.filename
-    print temp
-    f.save(temp)
-
+   
+    
     #创建 by wuyy
 
     # (1)上传文件插入数据库
@@ -125,7 +123,23 @@ def upload():
     db.session.add(t)
     db.session.commit()
 
-    # (2)通过用户名查找对应的任务,存储在result 字典里面
+    # (2)存储文件到本地
+    temp = basedir+'\\pcap\\'+str(current_user.id)+'_'+str(t.id)+'.pcap'
+    print temp
+    f.save(temp)
+    
+    
+    '''
+    # (3)删除任务，根据任务ID
+    dt=Task.query.filter_by(id=5).first()
+    db.session.delete(dt)
+    db.session.commit()
+    '''
+    return redirect('/uploadMission')
+
+@app.route('/display', methods=['POST','GET'])
+def display():
+    # (1)通过用户名查找对应的任务,存储在result 字典里面
     task = Task.query.filter_by(userId=current_user.id).all()
     result={}
     for x in task:
@@ -137,15 +151,8 @@ def upload():
         A['resultPath']=x.resultPath
         result[x.id]=A
     print result
-
-    '''
-    # (3)删除任务，根据任务ID
-    dt=Task.query.filter_by(id=5).first()
-    db.session.delete(dt)
-    db.session.commit()
-    '''
-    return redirect('/uploadMission')
-
+    return redirect('/missionList')
+    
 @app.route('/index')
 def index():
 	return render_template('index.html')
