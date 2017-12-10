@@ -19,6 +19,9 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_login import UserMixin
 from flask_login import current_user
 from database.database import database
+import threading
+from time import ctime,sleep
+
 
 #initialization of app
 app = Flask(__name__)
@@ -62,6 +65,15 @@ class Task(db.Model):
     beginTime=db.Column(db.Integer)
     endTime=db.Column(db.Integer)
     resultPath=db.Column(db.String(200))
+
+# 运行任务的子线程
+def RunMission(func):
+    print "start running"
+    str =  "test.exe 100000000 %d" %(func)
+    os.system(str)
+    print "finish running"
+
+threads = []
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -108,26 +120,26 @@ def login():
 			flash("Wrong password")
 	return render_template('login.html')
 
-
-
+#上传任务
 @app.route('/upload', methods=['POST','GET'])
 def upload():
     f = request.files['uploadfile']
-   
-    
-    #创建 by wuyy
 
     # (1)上传文件插入数据库
     path = basedir + '\\result\\' + str(current_user.username) + '\\'
     t=Task(userId = current_user.id,isCompleted = 0, beginTime = int(time.time()), endTime = 0, resultPath=path)
     db.session.add(t)
     db.session.commit()
-
     # (2)存储文件到本地
     temp = basedir+'\\pcap\\'+str(current_user.id)+'_'+str(t.id)+'.pcap'
     print temp
     f.save(temp)
-    
+
+    # (3)开启子线程来运行任务
+    t = threading.Thread(target=RunMission,args=(int(time.time()),))
+    threads.append(t)
+    t.setDaemon(True)
+    t.start()
     
     '''
     # (3)删除任务，根据任务ID
@@ -137,6 +149,7 @@ def upload():
     '''
     return redirect('/uploadMission')
 
+#显示任务列表
 @app.route('/display', methods=['POST','GET'])
 def display():
     # (1)通过用户名查找对应的任务,存储在result 字典里面
