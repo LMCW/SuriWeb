@@ -38,12 +38,35 @@
             </div>
         </div>
     </nav>
-     <div class="bg">
-      <a  href="display"><label>click me</label></a>
-     </div>
+    <div class="bg">
+        <div class="btn1">
+            <button class="btn btn-success" onclick = "window.location.reload();">  
+                <span class="glyphicon glyphicon-refresh"></span> 点我刷新！  
+            </button>  
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover" id="myTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>完成状态</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                    </tr>
+                </thead>
+                
+                    <tbody id="mission_list">
+                    </tbody>
+            </table>
+        </div>
+    </div>
     <script>
         $(window).scroll(function () {
             if ($(".navbar").offset().top > 50) {$(".navbar-fixed-top").addClass("top-nav");
             }else {$(".navbar-fixed-top").removeClass("top-nav");}
         })</script>
+    <script type=text/javascript>
+        var $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+    </script>
+    <script type="text/javascript" src="../static/js/missionList/display.js"></script>
 </body></html>

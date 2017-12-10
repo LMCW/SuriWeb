@@ -140,18 +140,23 @@ def upload():
 @app.route('/display', methods=['POST','GET'])
 def display():
     # (1)通过用户名查找对应的任务,存储在result 字典里面
-    task = Task.query.filter_by(userId=current_user.id).all()
-    result={}
-    for x in task:
-        A={}
-        A['userId']=x.userId
-        A['isCompleted']=x.isCompleted
-        A['beginTime']=x.beginTime
-        A['endTime']=x.endTime
-        A['resultPath']=x.resultPath
-        result[x.id]=A
-    print result
-    return redirect('/missionList')
+
+    if request.method == 'GET':
+        task = Task.query.filter_by(userId=current_user.id).all()
+        result = {}
+        cnt = 0
+        for x in task:
+            A={}
+            A['userId']=x.userId
+            A['isCompleted']=x.isCompleted
+            A['beginTime']=x.beginTime
+            A['endTime']=x.endTime
+            A['resultPath']=x.resultPath
+            result[cnt]=A
+            cnt = cnt + 1
+        print result
+        return jsonify(result=result, cnt=cnt)
+   
     
 @app.route('/index')
 def index():
@@ -214,6 +219,7 @@ def missionList():
 @app.route('/developing')
 def developing():
 	return render_template('developing.html')
+
 
 
 @app.route('/logout')
