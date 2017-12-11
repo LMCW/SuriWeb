@@ -25,6 +25,7 @@ from time import ctime,sleep
 
 #initialization of app
 app = Flask(__name__)
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.secret_key = 'Xa\r5\xfd\xe0\x84\x81)lfDCJ.a\xc2\x01\x1bn0\xef\x01\xc8'
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:root@localhost/suriweb'
@@ -43,18 +44,18 @@ login_manager.init_app(app)
 
 
 class User(db.Model, UserMixin):
-	__tablename__='user'
-	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(64),unique=True, index=True)
-	password = db.Column(db.String(28))
-	mail = db.Column(db.String(64),index=True)
-	info = db.Column(db.String(255))
+    __tablename__='user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64),unique=True, index=True)
+    password = db.Column(db.String(28))
+    mail = db.Column(db.String(64),index=True)
+    info = db.Column(db.String(255))
 
-	def confirm_password(self, p):
-		if p==self.password:
-			return True
-		else:
-			return False
+    def confirm_password(self, p):
+        if p==self.password:
+            return True
+        else:
+            return False
 
 
 class Task(db.Model):
@@ -66,18 +67,12 @@ class Task(db.Model):
     endTime=db.Column(db.Integer)
     resultPath=db.Column(db.String(200))
 
-# 运行任务的子线程
-def RunMission(func):
-    print "start running"
-    str =  "test.exe 100000000 %d" %(func)
-    os.system(str)
-    print "finish running"
 
 threads = []
 
 @login_manager.user_loader
 def load_user(user_id):
-	return User.query.filter_by(id=user_id).first()
+    return User.query.filter_by(id=user_id).first()
 
 
 
@@ -90,57 +85,81 @@ def request_to_dict(http_request):
 
 @app.route('/')
 def home():
-	return redirect('/index')
+    return redirect('/index')
 
 # login
 @app.route('/login', methods=['POST','GET'])
 def login():
-	error = None
-	#print request.form
-	#print request.method
-	if request.method == 'POST':
-		data=request_to_dict(request)
-		username = data['username']
-		password = data['password']
+    error = None
+    #print request.form
+    #print request.method
+    if request.method == 'POST':
+        data=request_to_dict(request)
+        username = data['username']
+        password = data['password']
 
-		user = User.query.filter_by(username=username).first()
-		'''
-		print User.query.all()
-		for i in User.query.all():
-			print i.username
-		'''
-		# check if these infomation are correct in the database
-		if user is not None and user.confirm_password(password):
-			print "Login Successful"
-			login_user(user,True)
-			return redirect('/index')
-		else:
-			# wrong username or password
-			print 'Fails login'
-			flash("Wrong password")
-	return render_template('login.html')
+        user = User.query.filter_by(username=username).first()
+        '''
+        print User.query.all()
+        for i in User.query.all():
+            print i.username
+        '''
+        # check if these infomation are correct in the database
+        if user is not None and user.confirm_password(password):
+            print "Login Successful"
+            login_user(user,True)
+            return redirect('/index')
+        else:
+            # wrong username or password
+            print 'Fails login'
+            flash("Wrong password")
+    return render_template('login.html')
+
+def test():
+    print 1
+    for i in Task.query.all():
+        if i.id == 50:
+            print 2
+            i.isCompleted = 1
+            # i.endTime = int(time.time())
+            print i
+            break
+
+isCompleted = {}
+endTime = {}
+firstStart = 0
+# 运行任务的子线程
+def RunMission(func, func2):
+    print "start running"
+    str =  "test.exe 100000000 %d ./result/%d_%d.result" %(int(time.time()),func2,func)
+    os.system(str)
+    # 修改数据库某一项的例子 假设我们已经知道任务的id，这里假设已知的id为10，即为数据库中root用户的第二个任务
+    isCompleted[func] = 1
+    endTime[func] = int(time.time())
+    print "finish running"
 
 #上传任务
 @app.route('/upload', methods=['POST','GET'])
 def upload():
     f = request.files['uploadfile']
 
-    # (1)上传文件插入数据库
+    # (1)上传文件插入数据库并通过全局变量isCompleted和endTime记录子线程中对数据库的修改
     path = basedir + '\\result\\' + str(current_user.username) + '\\'
     t=Task(userId = current_user.id,isCompleted = 0, beginTime = int(time.time()), endTime = 0, resultPath=path)
+
     db.session.add(t)
     db.session.commit()
+    isCompleted[t.id] = 0
+    endTime[t.id] = 0
     # (2)存储文件到本地
     temp = basedir+'\\pcap\\'+str(current_user.id)+'_'+str(t.id)+'.pcap'
-    print temp
     f.save(temp)
 
     # (3)开启子线程来运行任务
-    t = threading.Thread(target=RunMission,args=(int(time.time()),))
-    threads.append(t)
-    t.setDaemon(True)
-    t.start()
-    
+    t1 = threading.Thread(target=RunMission,args=(t.id, current_user.id, ))
+    threads.append(t1)
+    t1.setDaemon(True)
+    t1.start()
 
 
     '''
@@ -154,14 +173,24 @@ def upload():
 #显示任务列表
 @app.route('/display', methods=['POST','GET'])
 def display():
-    # (1)通过用户名查找对应的任务,存储在result 字典里面
-
+    global firstStart
+    # 对isCompleted和endTime进行初始化
+    if firstStart == 0:
+        firstStart = 1    
+        task = Task.query.filter_by(userId=current_user.id).all()
+        for x in task:
+            isCompleted[x.id] = x.id
+            endTime[x.id] = x.endTime
     if request.method == 'GET':
         task = Task.query.filter_by(userId=current_user.id).all()
         result = {}
         cnt = 0
         for x in task:
             A={}
+            if isCompleted[x.id]==1 :
+                x.isCompleted = 1
+                x.endTime = endTime[x.id]
+            A['id']=x.id
             A['userId']=x.userId
             A['isCompleted']=x.isCompleted
             A['beginTime']=x.beginTime
@@ -169,55 +198,49 @@ def display():
             A['resultPath']=x.resultPath
             result[cnt]=A
             cnt = cnt + 1
-        print result
 
-        # 修改数据库某一项的例子 假设我们已经知道任务的id，这里假设已知的id为10，即为数据库中root用户的第二个任务
-        targetId = 10
-        for i in Task.query.all():
-            if i.id == targetId:
-                i.isCompleted = 1
-                break
+        
 
         return jsonify(result=result, cnt=cnt)
    
     
 @app.route('/index')
 def index():
-	return render_template('index.html')
+    return render_template('index.html')
 
 @app.route('/register' ,methods=['POST','GET'])
 def register():
     if request.method == 'POST':
-    	data=request_to_dict(request)
-    	# 设定不允许出现重复username
-    	flag = True
-    	for i in User.query.all():
-    		if i.username == data['rname']:
-    			flag = False
-    			break
-    	# print flag
-    	if flag == False:
-    		print "the username has been registered, register fail"
-    		# flash 重复用户名处理
-    		flash("The username has been registered")
-    		return redirect('/register')
-    	else:
-    		# 判断邮箱是否合法
-    		if len(data['rmail']) > 7:
-    			if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", data['rmail']) != None:
-					# 在数据库中id递增，因此新加入的用户的id为usertable的size+1
-		    		newUser = User(id = len(User.query.all()) + 1, username = data['rname'], password = data['rpassword'], mail = data['rmail'], info = data['rinfo'])
-		        	db.session.add(newUser)
-		        	db.session.commit() 
-		        	print "register successfully"
-		        	return redirect('/login')
-	        	else:
-	        		print "invalid mailaddress, register fail"
-	        		flash("Invalid mail address")
-    		else:
-    			flash("Invalid mail address")
+        data=request_to_dict(request)
+        # 设定不允许出现重复username
+        flag = True
+        for i in User.query.all():
+            if i.username == data['rname']:
+                flag = False
+                break
+        # print flag
+        if flag == False:
+            print "the username has been registered, register fail"
+            # flash 重复用户名处理
+            flash("The username has been registered")
+            return redirect('/register')
+        else:
+            # 判断邮箱是否合法
+            if len(data['rmail']) > 7:
+                if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", data['rmail']) != None:
+                    # 在数据库中id递增，因此新加入的用户的id为usertable的size+1
+                    newUser = User(id = len(User.query.all()) + 1, username = data['rname'], password = data['rpassword'], mail = data['rmail'], info = data['rinfo'])
+                    db.session.add(newUser)
+                    db.session.commit() 
+                    print "register successfully"
+                    return redirect('/login')
+                else:
+                    print "invalid mailaddress, register fail"
+                    flash("Invalid mail address")
+            else:
+                flash("Invalid mail address")
 
-    	'''  原来的写法
+        '''  原来的写法
         data=request_to_dict(request)
         arg2={'username':data['rname'],'password':data['rpassword'],'mail':data['rmail'],'info':data['rinfo']}
         if database.insert(database.user_table,**arg2):
@@ -231,27 +254,27 @@ def register():
 @app.route('/uploadMission')
 @login_required
 def uploadMission():
-	return render_template('uploadMission.html')
+    return render_template('uploadMission.html')
 
 @app.route('/missionList')
 @login_required
 def missionList():
-	return render_template('missionList.html')
+    return render_template('missionList.html')
 
 
 @app.route('/developing')
 def developing():
-	return render_template('developing.html')
+    return render_template('developing.html')
 
 
 
 @app.route('/logout')
 @login_required
 def logout():
-	logout_user()
-	return redirect('/index')
+    logout_user()
+    return redirect('/index')
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+    app.run(debug=True)
 

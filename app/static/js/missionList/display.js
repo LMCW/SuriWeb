@@ -42,7 +42,7 @@ $(function () {
                     ];
             for (var i in data.result) {
                 data2[i] = {
-                    "id":i,
+                    "id":data.result[i].id,
                     "status":0,
                     "beginTime":0,
                     "endTime":0
@@ -59,6 +59,8 @@ $(function () {
                 timestamp = data.result[i].endTime;
                 newDate.setTime(timestamp * 1000);
                 data2[i].endTime = newDate.toLocaleString();
+                if (data.result[i].isCompleted == 0)
+                    data2[i].endTime = "-";
 
                
             }            
@@ -68,6 +70,9 @@ $(function () {
                 data:data2,
                 hover:false,
                 locale:'zh-CN',
+                sortable: true,                     //是否启用排序
+                sortName : "beginTime",
+                sortOrder: "asc", 
                 pagination: true,
                 pageSize: 10,
                 pageNumber:1, 
