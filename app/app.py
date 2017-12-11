@@ -141,6 +141,8 @@ def upload():
     t.setDaemon(True)
     t.start()
     
+
+
     '''
     # (3)删除任务，根据任务ID
     dt=Task.query.filter_by(id=5).first()
@@ -168,6 +170,14 @@ def display():
             result[cnt]=A
             cnt = cnt + 1
         print result
+
+        # 修改数据库某一项的例子 假设我们已经知道任务的id，这里假设已知的id为10，即为数据库中root用户的第二个任务
+        targetId = 10
+        for i in Task.query.all():
+            if i.id == targetId:
+                i.isCompleted = 1
+                break
+
         return jsonify(result=result, cnt=cnt)
    
     
