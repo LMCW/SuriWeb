@@ -6,7 +6,6 @@ html, body {width:100%;height:100%;} /*非常重要的样式让背景图片100%适应整个屏幕*
 	width: 100%;
 	height: 120%;
 	padding: 100px 0;
-	text-align: center;
 	color: #fff;background: 
 	url(../img/missionList/bg2.jpg) no-repeat bottom center;
 	background-color: #000;
@@ -17,7 +16,7 @@ html, body {width:100%;height:100%;} /*非常重要的样式让背景图片100%适应整个屏幕*
 .btn1 {
 	position:absolute;
 	top:10%;
-	left:50%;
+	left:65%;
 	right:10%;
 }
 
@@ -35,6 +34,14 @@ html, body {width:100%;height:100%;} /*非常重要的样式让背景图片100%适应整个屏幕*
 	top:20%;
 	left:50%;
 	right:10%;
+}
+
+.table {
+ 	locale:'zh-CN';
+        pagination: true;
+        pageNumber:1;
+        pageSize: 3;
+        ageList: [2,3,4];      
 }
 
 .my-navbar {

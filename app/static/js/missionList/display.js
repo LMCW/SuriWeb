@@ -1,4 +1,5 @@
 
+
 function insertItem(table, myItem, i) {
     var item = document.createElement('tr');
     item.id = i;
@@ -7,9 +8,15 @@ function insertItem(table, myItem, i) {
     var item_id = document.createElement('td');
     item_id.innerText = i;
     var item_status = document.createElement('td');
-    item_status.innerText = myItem['isCompleted'];
+    if (myItem['isCompleted'] == 0) 
+        item_status.innerText = 'no';
+    else
+        item_status.innerText = 'yes';
     var item_beginTime = document.createElement('td');
-    item_beginTime.innerText = myItem['beginTime'];
+    var timestamp = myItem['beginTime'];
+    var newDate = new Date();
+    newDate.setTime(timestamp * 1000);
+    item_beginTime.innerText = newDate.toUTCString();
     var item_endTime = document.createElement('td');
     item_endTime.innerText = myItem['endTime'];
    
@@ -23,7 +30,6 @@ function insertItem(table, myItem, i) {
     table.appendChild(item);
 }
 
-
 $(function () {
     function submit_form(e) {
         $.getJSON($SCRIPT_ROOT + '/display', {
@@ -32,10 +38,46 @@ $(function () {
             now: new Date().getTime()
         },
         function (data) {
-            var table = document.getElementById("myTable");
+            var data2 = [
+                    ];
             for (var i in data.result) {
-                insertItem(table, data.result[i], i);
-            }
+                data2[i] = {
+                    "id":i,
+                    "status":0,
+                    "beginTime":0,
+                    "endTime":0
+                };
+                if (data.result[i].isCompleted == 0)
+                    data2[i].status = "no";
+                else
+                    data2[i].status = "yes";
+
+                var timestamp = data.result[i].beginTime;
+                var newDate = new Date();
+                newDate.setTime(timestamp * 1000);
+                data2[i].beginTime = newDate.toLocaleString();
+                timestamp = data.result[i].endTime;
+                newDate.setTime(timestamp * 1000);
+                data2[i].endTime = newDate.toLocaleString();
+
+               
+            }            
+            var $table = $('#table');
+            $table.bootstrapTable({
+                classes: 'table table-bordered',
+                data:data2,
+                hover:false,
+                locale:'zh-CN',
+                pagination: true,
+                pageSize: 10,
+                pageNumber:1, 
+                pageList: [5,10,15],//可供选择的每页的行数（*）
+                sidePagination: "client"
+            });
+            // var table = document.getElementById("mission_list");
+            // for (var i in data.result) {
+            //     insertItem(table, data.result[i], i);
+            // }
         });
     };
     window.onload = submit_form;
