@@ -32,8 +32,8 @@ html, body {width:100%;height:100%;} /*非常重要的样式让背景图片100%适应整个屏幕*
 	font-size:17px;
 	position:absolute;
 	top:20%;
-	left:50%;
-	right:10%;
+	left:48%;
+	right:8%;
 }
 
 .table {

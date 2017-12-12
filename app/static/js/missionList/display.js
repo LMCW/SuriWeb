@@ -1,4 +1,11 @@
-
+function downloadResult(mission_id, mission_status) {
+    if ( mission_status == 'no') {
+        alert("任务尚未完成");
+        return;
+    }
+    var link= $('<a href="http://127.0.0.1:5000/downloadResult?id='+mission_id+'" download="filename.txt">Download file</a>');
+    link.get(0).click();   
+}
 
 function insertItem(table, myItem, i) {
     var item = document.createElement('tr');
@@ -71,13 +78,40 @@ $(function () {
                 hover:false,
                 locale:'zh-CN',
                 sortable: true,                     //是否启用排序
-                sortName : "beginTime",
+                sortName : "id",
                 sortOrder: "asc", 
                 pagination: true,
                 pageSize: 10,
                 pageNumber:1, 
                 pageList: [5,10,15],//可供选择的每页的行数（*）
-                sidePagination: "client"
+                sidePagination: "client",
+                columns: [
+                {
+                    title: 'ID',
+                    field: 'id'
+                }, 
+                {
+                    title: '是否完成',
+                    field: 'status'
+                }, 
+                {
+                    title: '开始时间',
+                    field: 'beginTime'
+                },
+                {
+                    title: '结束时间',
+                    field: 'endTime'
+                },
+                {
+                    title: '操作',
+                    field: 'oper',
+                    formatter:function(value,row,index){    
+                        //alert(index);
+                        var e = '<a href="#" mce_href="#" onclick="downloadResult('+ row.id+',\''+ row.status+ '\')">下载结果</a> ';  
+                        return e;  
+                    } 
+                } 
+                ]
             });
             // var table = document.getElementById("mission_list");
             // for (var i in data.result) {

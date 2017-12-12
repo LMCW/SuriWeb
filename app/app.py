@@ -14,6 +14,7 @@ from flask import render_template
 from flask import jsonify
 from flask import session
 from flask import flash
+from flask import send_file, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_login import UserMixin
@@ -202,7 +203,11 @@ def display():
         
 
         return jsonify(result=result, cnt=cnt)
-   
+
+@app.route('/downloadResult', methods=['GET'])
+def downloadResult():
+    return send_from_directory('result',str(current_user.id)+'_'+str(request.args.get("id"))+'.result',as_attachment=True)
+    #return 1
     
 @app.route('/index')
 def index():
