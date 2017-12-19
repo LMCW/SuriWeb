@@ -271,6 +271,27 @@ def missionList():
 def developing():
     return render_template('developing.html')
 
+@app.route('/infomation')
+@login_required
+def infomation():
+    test = []
+    for i in User.query.all():
+        if i.username == current_user.username:
+            print i.username
+            print i.mail
+            print i.info
+            test.append(str(i.username)) # test[0] username
+            test.append(str(i.mail)) # test[1] mail
+            test.append(str(i.info)) # test[2] info
+            #flash(test) # go to frontend
+
+    
+    #test.append("root")
+    #test.append("root@qq.com")
+    #test.append("I'm root")
+    flash(test)
+    return render_template('infomation.html')
+
 
 
 @app.route('/logout')
