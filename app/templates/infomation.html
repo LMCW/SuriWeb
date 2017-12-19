@@ -64,7 +64,7 @@
                                     <div class="form-bottom">
                                         <div class="form-group">
 
-                                            <input type="text" placeholder="用户名：{{message[0]}}" class="form-first-name form-control" id="register-userName" name = "rname">
+                                            <input type="text" placeholder="用户名：{{message[0]}}" class="form-first-name form-control" id="register-userName" name = "rname" disabled>
                                         </div>
                                         <div class="form-group">
                                             <input type="password" placeholder="密码：******" class="form-password form-control" id="register-password" name = "rpassword">
@@ -74,12 +74,12 @@
                                             class="form-repeat-password form-control" id="register-repeat-password" name = "rrpassword">
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" placeholder="邮箱：{{message[1]}}" class="form-last-name form-control" id="mail" name = "rmail">
+                                            <input type="text" placeholder="邮箱：{{message[1]}}" class="form-last-name form-control" id="mail" name = "rmail" disabled>
                                         </div>
                                         <div class="form-group">
                                             <textarea placeholder="个人简介：{{message[2]}}" class="form-about-yourself form-control" id="info-of-yourself" name = "rinfo"></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-default" onclick="finishRegister()">修改</button>
+                                        <button type="submit" class="btn btn-default" onclick="changeInfo()">修改</button>
                                     </div>
                                 </fieldset>
                             </form>
@@ -97,5 +97,10 @@
         if ($(".navbar").offset().top > 50) {$(".navbar-fixed-top").addClass("top-nav");
         }else {$(".navbar-fixed-top").removeClass("top-nav");}
         })</script>
+        <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+        <script src="../static/js/jquery-1.11.3.js"></script>
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        <script src="../static/js/bootstrap.min.js"></script>
+        <script src="../static/js/changeInfo.js"></script>
     </body>
 </html>
