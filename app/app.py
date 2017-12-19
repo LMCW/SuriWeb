@@ -230,20 +230,26 @@ def register():
             flash("The username has been registered")
             return redirect('/register')
         else:
+			if data['rpassword'] == "" or data['rinfo'] == "" or data['rpassword'] != data['rrpassword']:
+				print "invalid password or info, register fail"
+				flash("Invalid password or info")
+				return redirect('/register')
             # 判断邮箱是否合法
-            if len(data['rmail']) > 7:
-                if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", data['rmail']) != None:
-                    # 在数据库中id递增，因此新加入的用户的id为usertable的size+1
-                    newUser = User(id = len(User.query.all()) + 1, username = data['rname'], password = data['rpassword'], mail = data['rmail'], info = data['rinfo'])
-                    db.session.add(newUser)
-                    db.session.commit() 
-                    print "register successfully"
-                    return redirect('/login')
-                else:
-                    print "invalid mailaddress, register fail"
-                    flash("Invalid mail address")
-            else:
-                flash("Invalid mail address")
+			if len(data['rmail']) > 7:
+				if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", data['rmail']) != None:
+				    # 在数据库中id递增，因此新加入的用户的id为usertable的size+1
+				    newUser = User(id = len(User.query.all()) + 1, username = data['rname'], password = data['rpassword'], mail = data['rmail'], info = data['rinfo'])
+				    db.session.add(newUser)
+				    db.session.commit() 
+				    print "register successfully"
+				    return redirect('/login')
+				else:
+				    print "invalid mailaddress, register fail"
+				    flash("Invalid mail address")
+				    return redirect('/register')
+			else:
+			    flash("Invalid mail address")
+			    return redirect('/register')
 
         '''  原来的写法
         data=request_to_dict(request)
@@ -289,10 +295,13 @@ def infomation():
 
 @app.route('/infomation' ,methods=['POST','GET'])
 def changeInfomation():
-	print "changeInfomation"
+	print "change infomation"
 	# username and mail cannot be changed
 	if request.method == 'POST':
 		data = request_to_dict(request)
+		if data['rpassword'] == "" or data['rinfo'] == "" or data['rpassword'] != data['rrpassword']:
+			print "change infomation failed. Invalid password or info."
+			return redirect('infomation')
 		for i in User.query.all():
 			if i.id == current_user.id:
 				i.password = data['rpassword']
