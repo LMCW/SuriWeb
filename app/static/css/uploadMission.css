@@ -17,8 +17,8 @@ html, body {width:100%;height:100%;} /*非常重要的样式让背景图片100%适应整个屏幕*
 .div1 {
 	position:absolute;
 	top:21%;
-	left:33%;
-	right:34%;
+	left:30%;
+	right:30%;
 }
 .div2 {
 	position:absolute;
