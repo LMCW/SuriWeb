@@ -3,7 +3,7 @@ function downloadResult(mission_id, mission_status) {
         alert("任务尚未完成");
         return;
     }
-    var link= $('<a href="http://127.0.0.1:5000/downloadResult?id='+mission_id+'" download="filename.txt">Download file</a>');
+    var link= $('<a href="downloadResult?id='+mission_id+'" download="filename.txt">Download file</a>');
     link.get(0).click();   
 }
 

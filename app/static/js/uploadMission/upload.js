@@ -1,5 +1,5 @@
 $("#uploadfile").fileinput({
-    uploadUrl: "http://127.0.0.1:5000/upload", //上传的地址
+    uploadUrl: "/upload", //上传的地址
     allowedFileExtensions: ['pcap'],//接收的文件后缀
     // //uploadExtraData:{"id": 1, "fileName":'123.mp3'},
     //uploadAsync: true, //默认异步上传

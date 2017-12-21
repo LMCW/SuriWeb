@@ -132,7 +132,7 @@ firstStart = 0
 # 运行任务的子线程
 def RunMission(func, func2):
     print "start running"
-    str =  "test.exe 100000000 %d ./result/%d_%d.result" %(int(time.time()),func2,func)
+    str =  "./test.exe 100000000 %d ./result/%d_%d.result" %(int(time.time()),func2,func)
     os.system(str)
     # 修改数据库某一项的例子 假设我们已经知道任务的id，这里假设已知的id为10，即为数据库中root用户的第二个任务
     isCompleted[func] = 1
@@ -145,7 +145,8 @@ def upload():
     f = request.files['uploadfile']
 
     # (1)上传文件插入数据库并通过全局变量isCompleted和endTime记录子线程中对数据库的修改
-    path = basedir + '\\result\\' + str(current_user.username) + '\\'
+    path = basedir + '/result/' + str(current_user.username) + '/'
+    print path
     t=Task(userId = current_user.id,isCompleted = 0, beginTime = int(time.time()), endTime = 0, resultPath=path)
 
     db.session.add(t)
@@ -153,7 +154,7 @@ def upload():
     isCompleted[t.id] = 0
     endTime[t.id] = 0
     # (2)存储文件到本地
-    temp = basedir+'\\pcap\\'+str(current_user.id)+'_'+str(t.id)+'.pcap'
+    temp = basedir+'/pcap/'+str(current_user.id)+'_'+str(t.id)+'.pcap'
     f.save(temp)
 
     # (3)开启子线程来运行任务
