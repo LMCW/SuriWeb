@@ -7,6 +7,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')  #Python自然调用ascii编码解码程序去处理字符流，当字符流不属于ascii范围内，就会抛出异常,所以python 默认编码改为utf-8
 
 import time
+from scapy.all import *
 from flask import Flask, Blueprint
 from flask import request
 from flask import redirect
@@ -273,6 +274,10 @@ def uploadMission():
 def missionList():
     return render_template('missionList.html')
 
+@app.route('/analyse')
+@login_required
+def analyse():
+    return render_template('scapy.html')
 
 @app.route('/developing')
 def developing():
