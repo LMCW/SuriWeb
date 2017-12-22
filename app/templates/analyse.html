@@ -10,10 +10,9 @@
         <script type="text/javascript" src="../static/bootstrap-3.3.5/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="../static/bootstrapfileinput/js/fileinput.min.js"></script>
         <script type="text/javascript" src="../static/bootstrapfileinput/js/fileinput_locale_zh.js"></script>
-            
         <link rel="stylesheet" href="../static/css/bootstrap.min.css">
         <link rel="stylesheet" href="../static/bootstrapfileinput/css/fileinput.css" />
-        <link rel="stylesheet" type="text/css" href="../static/css/uploadMission.css">
+        <link rel="stylesheet" type="text/css" href="../static/css/analyse.css">
     </head>
     <body>
         <nav class="navbar navbar-fixed-top my-navbar" role="navigation">
@@ -46,13 +45,25 @@
             </div>
         </nav>
         <div class="bg">
-            <div class="div2">    
-            <script type="text/javascript" src="../static/js/uploadMission/upload.js"></script>
-        </div>
+	    <div class="div2">
+	        <img src="../static/img/analyse/ID.png" width="70%" height="70%">
+            </div>
+            <div class="div1">
+		<select class="form-control" id="mySelect">
+	  	</select>
+	    </div>
+	    <div class="btn1">
+                <button class="btn btn-primary" onclick = "analyse();">  
+                    <span class="glyphicon glyphicon-wrench"></span>开始分析  
+                </button>  
+            </div>
+        
+       	</div>
         <script>
         $(window).scroll(function () {
         if ($(".navbar").offset().top > 50) {$(".navbar-fixed-top").addClass("top-nav");
         }else {$(".navbar-fixed-top").removeClass("top-nav");}
         })</script>
-    </body>
+            <script type="text/javascript" src="../static/js/analyse/analyse.js"></script>    
+	</body>
 </html>

@@ -277,7 +277,7 @@ def missionList():
 @app.route('/analyse')
 @login_required
 def analyse():
-    return render_template('scapy.html')
+    return render_template('analyse.html')
 
 @app.route('/developing')
 def developing():
