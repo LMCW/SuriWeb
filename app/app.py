@@ -206,6 +206,11 @@ def display():
 
         return jsonify(result=result, cnt=cnt)
 
+#显示数据分析图表
+@app.route('/getChart', methods=['GET'])
+def getChart():
+    return jsonify(result=request.args.get("a"))
+
 @app.route('/downloadResult', methods=['GET'])
 def downloadResult():
     return send_from_directory('result',str(current_user.id)+'_'+str(request.args.get("id"))+'.result',as_attachment=True)
