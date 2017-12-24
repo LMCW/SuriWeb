@@ -26,6 +26,24 @@ function analyse() {
         a: obj.value
     },
     function (data) {
+    	if (data.flag == 0)
+		alert("开始分析");
+	else
+		alert("请等待当前分析结束");
+    });
+}
+
+function refresh() {
+    var obj = document.getElementById("mySelect"); //获取select对象 
+    $.getJSON('/refresh', {
+        a: obj.value
+    },
+    function (data) {
+	if (data.flag == 1) { 
+		alert("正在分析中");
+		return;
+	}
+	alert("分析结束");
 	$('#myChart').remove();
     	
         $('#myChart2').remove();

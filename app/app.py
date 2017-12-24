@@ -141,6 +141,55 @@ def RunMission(func, func2):
     endTime[func] = int(time.time())
     print "finish running"
 
+
+proto = {}
+srcIP = {}
+dstIP = {}
+isAnalysing = 0
+
+def RunChart(func):
+    print "start analysing"
+    global proto
+    global srcIP
+    global dstIP
+    global isAnalysing
+    proto = {}
+    srcIP = {}
+    dstIP = {}
+    s1=PcapReader(func)
+    cnt=0
+    while 1:
+    	p = s1.read_packet()
+   	if p is None:
+            break
+    	else:
+            cnt = cnt + 1
+        if cnt % 10000 == 0:
+            print cnt
+        if not(p.name == 'IP' or p.payload.name == 'IP' or p.payload.payload.name == 'IP'):
+            continue
+        reprval = p["IP"].src
+        if reprval in srcIP.keys(): 
+            srcIP[reprval] = srcIP[reprval] + 1
+        else:
+            srcIP[reprval] = 1
+        
+        reprval = p["IP"].dst
+           
+        if reprval in dstIP.keys(): 
+            dstIP[reprval] = dstIP[reprval] + 1
+        else:
+            dstIP[reprval] = 1
+            
+        reprval = p["IP"].proto
+        if reprval in proto.keys(): 
+            proto[reprval] = proto[reprval] + 1
+        else:
+            proto[reprval] = 1
+    s1.close()
+    isAnalysing = 0
+    print "finish analysing"
+
 #上传任务
 @app.route('/upload', methods=['POST','GET'])
 def upload():
@@ -207,45 +256,30 @@ def display():
 
         return jsonify(result=result, cnt=cnt)
 
-#显示数据分析图表
+#根据任务id开启解析线程
 @app.route('/getChart', methods=['GET'])
 def getChart():
+    global isAnalysing
+    if isAnalysing == 1:
+        return jsonify(flag = 1)
     path = basedir+'/pcap/'+str(current_user.id)+'_'+str(request.args.get("a"))+'.pcap'
-    proto = {}
-    srcIP = {}
-    dstIP = {}
-    s1=PcapReader(path)
-    cnt=0
-    while 1:
-	p = s1.read_packet()
-	if p is None:
-	    break
- 	else:
-            cnt = cnt + 1
-	    if cnt % 10000 == 0:
-		print cnt
-	    if not(p.name == 'IP' or p.payload.name == 'IP' or p.payload.payload.name == 'IP'):
- 	        continue
-	    reprval = p["IP"].src
-            if reprval in srcIP.keys(): 
-                srcIP[reprval] = srcIP[reprval] + 1
-            else:
-            	srcIP[reprval] = 1
-	    
-            reprval = p["IP"].dst
-           
-            if reprval in dstIP.keys(): 
-                dstIP[reprval] = dstIP[reprval] + 1
-            else:
-            	dstIP[reprval] = 1
-            
-            reprval = p["IP"].proto
-            if reprval in proto.keys(): 
-                proto[reprval] = proto[reprval] + 1
-            else:
-                proto[reprval] = 1
-    s1.close()
-    return jsonify(proto=proto, srcIP=srcIP, dstIP=dstIP)
+    t1 = threading.Thread(target=RunChart,args=(path,))
+    threads.append(t1)
+    t1.setDaemon(True)
+    t1.start()
+    isAnalysing = 1
+    return jsonify(flag = 0)
+
+#刷新解析界面并返回结果
+@app.route('/refresh', methods=['GET'])
+def refresh():
+    global isAnalysing
+    global proto
+    global srcIP
+    global dstIP
+    if isAnalysing == 1:
+        return jsonify(flag = 1, srcIP = {}, dstIP = {}, proto = {})
+    return jsonify(flag = 0, srcIP = srcIP, dstIP = dstIP, proto = proto)
 
 @app.route('/downloadResult', methods=['GET'])
 def downloadResult():
