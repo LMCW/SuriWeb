@@ -43,7 +43,7 @@ login_manager.session_protection = 'basic'
 login_manager.login_view = 'login'
 login_manager.remember_cookie_duration = timedelta(days=1)
 login_manager.init_app(app)
-
+firstStart = 0
 
 class User(db.Model, UserMixin):
     __tablename__='user'
@@ -92,6 +92,7 @@ def home():
 # login
 @app.route('/login', methods=['POST','GET'])
 def login():
+    global firstStart
     error = None
     #print request.form
     #print request.method
@@ -110,6 +111,7 @@ def login():
         if user is not None and user.confirm_password(password):
             print "Login Successful"
             login_user(user,True)
+	    firstStart = 0
             return redirect('/index')
         else:
             # wrong username or password
@@ -129,7 +131,6 @@ def test():
 
 isCompleted = {}
 endTime = {}
-firstStart = 0
 # 运行任务的子线程
 def RunMission(func, func2):
     print "start running"
