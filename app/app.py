@@ -134,8 +134,13 @@ endTime = {}
 # 运行任务的子线程
 def RunMission(func, func2):
     print "start running"
-    str =  "./test.exe 100000000 %d ./result/%d_%d.result" %(int(time.time()),func2,func)
+    str1 =  "./test.exe 100000000 %d ./result/%d_%d.result" %(int(time.time()),func2,func)
+    str =  "suricata -r "+basedir+"/pcap/%d_%d.pcap "%(func2,func)+"-l "+basedir+"/log/%d_%d/"%(func2,func)
+    print str
+    os.system("mkdir "+basedir+"/log/%d_%d/"%(func2,func))
     os.system(str)
+    os.system("zip -r result/%d_%d.zip log/%d_%d/" %(func2,func,func2,func))
+    os.system("rm -r log/%d_%d" %(func2, func))
     # 修改数据库某一项的例子 假设我们已经知道任务的id，这里假设已知的id为10，即为数据库中root用户的第二个任务
     isCompleted[func] = 1
     endTime[func] = int(time.time())
@@ -262,7 +267,11 @@ def getChart():
     global isAnalysing
     if isAnalysing == 1:
         return jsonify(flag = 1)
+    if request.args.get("a")=="":
+	return jsonify(flag = 2)
+    print request.args.get("a")
     path = basedir+'/pcap/'+str(current_user.id)+'_'+str(request.args.get("a"))+'.pcap'
+    print path
     t1 = threading.Thread(target=RunChart,args=(path,))
     threads.append(t1)
     t1.setDaemon(True)
@@ -283,7 +292,7 @@ def refresh():
 
 @app.route('/downloadResult', methods=['GET'])
 def downloadResult():
-    return send_from_directory('result',str(current_user.id)+'_'+str(request.args.get("id"))+'.result',as_attachment=True)
+    return send_from_directory('result',str(current_user.id)+'_'+str(request.args.get("id"))+'.zip',as_attachment=True)
     #return 1
     
 @app.route('/index')

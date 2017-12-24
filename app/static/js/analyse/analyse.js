@@ -29,6 +29,9 @@ function analyse() {
     	if (data.flag == 0)
 		alert("开始分析");
 	else
+	    if (data.flag == 2)
+		alert("未选择任务");
+	    else
 		alert("请等待当前分析结束");
     });
 }
