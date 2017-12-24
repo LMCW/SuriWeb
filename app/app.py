@@ -210,7 +210,42 @@ def display():
 #显示数据分析图表
 @app.route('/getChart', methods=['GET'])
 def getChart():
-    return jsonify(result=request.args.get("a"))
+    path = basedir+'/pcap/'+str(current_user.id)+'_'+str(request.args.get("a"))+'.pcap'
+    proto = {}
+    srcIP = {}
+    dstIP = {}
+    s1=PcapReader(path)
+    cnt=0
+    while 1:
+	p = s1.read_packet()
+	if p is None:
+	    break
+ 	else:
+            cnt = cnt + 1
+	    if cnt % 10000 == 0:
+		print cnt
+	    if not(p.name == 'IP' or p.payload.name == 'IP' or p.payload.payload.name == 'IP'):
+ 	        continue
+	    reprval = p["IP"].src
+            if reprval in srcIP.keys(): 
+                srcIP[reprval] = srcIP[reprval] + 1
+            else:
+            	srcIP[reprval] = 1
+	    
+            reprval = p["IP"].dst
+           
+            if reprval in dstIP.keys(): 
+                dstIP[reprval] = dstIP[reprval] + 1
+            else:
+            	dstIP[reprval] = 1
+            
+            reprval = p["IP"].proto
+            if reprval in proto.keys(): 
+                proto[reprval] = proto[reprval] + 1
+            else:
+                proto[reprval] = 1
+    s1.close()
+    return jsonify(proto=proto, srcIP=srcIP, dstIP=dstIP)
 
 @app.route('/downloadResult', methods=['GET'])
 def downloadResult():

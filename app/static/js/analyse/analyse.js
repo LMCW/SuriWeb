@@ -26,15 +26,19 @@ function analyse() {
         a: obj.value
     },
     function (data) {
-        alert(data.result);
 	$('#myChart').remove();
     	
         $('#myChart2').remove();
 	$('#div3').append('<canvas id="myChart"></canvas>');
 	
         $('#div5').append('<canvas id="myChart2"></canvas>');
-	var pieData = [];
-	var value = [1,2];
+	var pieData = [];  
+	var ys = {"udp":17,"tcp": 6};
+	if (!data.proto.hasOwnProperty(ys["tcp"]))
+	    data.proto[ys["tcp"]] = 0;
+        if (!data.proto.hasOwnProperty(ys["udp"]))
+            data.proto[ys["udp"]] = 0;
+	var value = [data.proto[ys["tcp"]],data.proto[ys["udp"]]];
 	var label = ["TCP","UDP"];
             var colorarr = ["#949FB1", "#4D5360"];
             var highlightarr = ["#A8B3C5", "#616774"];
@@ -50,7 +54,7 @@ function analyse() {
             window.myPie = new Chart(ctx).Pie(pieData);
     
 	var pieData2 = [];
-        var value2 = [11,22];
+	var value2 = [Object.keys(data.srcIP).length, Object.keys(data.dstIP).length];
         var label2 = ["SrcIp","DstIp"];
             var colorarr2 = ["#FDB45C", "#46BFBD"];
             var highlightarr2 = ["#FFC870", "#5AD3D1"];
