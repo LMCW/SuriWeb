@@ -211,15 +211,13 @@ def RunChart(func):
  	idx = int((statistic[i][0] - statistic[0][0])/timeseg)
 	if idx >= 100:
 	    idx = 99
-        print idx
+       
 	cumulate[idx] += 1
 	
     tmp = segments[0]
     for i in range(100):
 	segments[i] -= tmp
     isAnalysing = 0
-    print segments
-    print cumulate
     print "finish analysing"
 
 #上传任务
