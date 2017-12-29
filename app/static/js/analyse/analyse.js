@@ -46,52 +46,123 @@ function refresh() {
     		alert("正在分析中");
     		return;
     	}
-	    alert("分析结束");
-	    $('#myChart').remove();
-    	
-        $('#myChart2').remove();
-	    $('#div3').append('<canvas id="myChart"></canvas>');
-        $('#div5').append('<canvas id="myChart2"></canvas>');
-    	var pieData = [];  
-    	var ys = {"udp":17,"tcp": 6};
+	alert("分析结束");
+        var ys = {"udp":17,"tcp": 6};
     	if (!data.proto.hasOwnProperty(ys["tcp"]))
     	    data.proto[ys["tcp"]] = 0;
         if (!data.proto.hasOwnProperty(ys["udp"]))
             data.proto[ys["udp"]] = 0;
-    	var value = [data.proto[ys["tcp"]],data.proto[ys["udp"]]];
-    	var label = ["TCP","UDP"];
-        var colorarr = ["#949FB1", "#4D5360"];
-        var highlightarr = ["#A8B3C5", "#616774"];
-        for (var i = 0; i < 2; i++) {
-            pieData[i] = {
-                value: value[i],
-                color: colorarr[i % 2],
-                highlight: highlightarr[i % 2],
-                label: label[i]
-            };
-        }
-        var ctx = document.getElementById("myChart").getContext("2d");
-        window.myPie = new Chart(ctx).Pie(pieData);
-        
-        var pieData2 = [];
-        var value2 = [Object.keys(data.srcIP).length, Object.keys(data.dstIP).length];
-        var label2 = ["SrcIp","DstIp"];
-        var colorarr2 = ["#FDB45C", "#46BFBD"];
-        var highlightarr2 = ["#FFC870", "#5AD3D1"];
-        for (var i = 0; i < 2; i++) {
-            pieData2[i] = {
-                value: value2[i],
-                color: colorarr2[i % 2],
-                highlight: highlightarr2[i % 2],
-                label: label2[i]
-            };
-        }
-        var ctx = document.getElementById("myChart2").getContext("2d");
-        window.myPie = new Chart(ctx).Pie(pieData2);
+
+        $('#div3').highcharts({
+            credits:{
+                enabled:false
+            },
+	    chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+		//backgroundColor: 'rgba(0,0,0,0)'
+            },
+            title: {
+                text: '传输层协议'
+            },
+            tooltip: {
+                //headerFormat: '{series.name}<br>',
+                //pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+        	formatter:function(){ 
+		return '<b>'+ this.point.name +'</b>: '+ Highcharts.numberFormat(this.percentage, 1) +'% ('+Highcharts.numberFormat(this.y, 0, ',') +' 个)';
+	    	}
+	    },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: '传输层协议',
+                data: [
+                    
+			['TCP',data.proto[ys["tcp"]]],
+		    
+		    
+                    
+                        ['UDP',data.proto[ys["udp"]]]
+                    ]
+                   
+                    // {
+                    //     name: 'Chrome',
+                    //     y: 12.8,
+                    //     sliced: true,
+                    //     selected: true
+                    // },
+               
+            }]
+        });
+
+        $('#div5').highcharts({
+            credits:{
+                enabled:false
+            },
+	    chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+		//backgroundColor: 'rgba(0,0,0,0)'
+            },
+            title: {
+                text: '传输层协议'
+            },
+            tooltip: {
+                //headerFormat: '{series.name}<br>',
+                //pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+                formatter:function(){
+                return '<b>'+ this.point.name +'</b>: '+ Highcharts.numberFormat(this.percentage, 1) +'% ('+Highcharts.numberFormat(this.y, 0, ',') +' 个)';
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: '不同IP地址数',
+                data: [
+                    ['源IP',   Object.keys(data.srcIP).length],
+                    ['目的IP',   Object.keys(data.dstIP).length]
+                    // {
+                    //     name: 'Chrome',
+                    //     y: 12.8,
+                    //     sliced: true,
+                    //     selected: true
+                    // },
+                ]
+            }]
+        });
        	
         var chart = Highcharts.chart('div7', {
             credits:{
 		enabled:false
+	    },
+	    chart:{
+		//backgroundColor: 'rgba(0,0,0,0)'
 	    },
 	    title: {
                 text: '流量密度曲线'
