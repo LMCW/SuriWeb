@@ -150,6 +150,8 @@ def RunMission(func, func2):
 proto = {}
 srcIP = {}
 dstIP = {}
+segments = []
+cumulate = []
 isAnalysing = 0
 
 def RunChart(func):
@@ -157,12 +159,15 @@ def RunChart(func):
     global proto
     global srcIP
     global dstIP
+    global segments
+    global cumulate
     global isAnalysing
     proto = {}
     srcIP = {}
     dstIP = {}
     s1=PcapReader(func)
     cnt=0
+    statistic = []
     while 1:
     	p = s1.read_packet()
    	if p is None:
@@ -171,7 +176,14 @@ def RunChart(func):
             cnt = cnt + 1
         if cnt % 10000 == 0:
             print cnt
-        if not(p.name == 'IP' or p.payload.name == 'IP' or p.payload.payload.name == 'IP'):
+        tmp = []
+	tmp.append(p.time)
+	try:
+	    tmp.append(p.len)
+	except Exception as e:
+	    tmp.append(-1)
+	statistic.append(tmp)
+	if not(p.name == 'IP' or p.payload.name == 'IP' or p.payload.payload.name == 'IP'):
             continue
         reprval = p["IP"].src
         if reprval in srcIP.keys(): 
@@ -192,7 +204,22 @@ def RunChart(func):
         else:
             proto[reprval] = 1
     s1.close()
+    timeseg = (statistic[-1][0]-statistic[0][0])/100.0
+    segments = [(statistic[0][0]+i*timeseg) for i in range(100)] #x array
+    cumulate = [0 for i in range(100)]
+    for i in range(cnt):
+ 	idx = int((statistic[i][0] - statistic[0][0])/timeseg)
+	if idx >= 100:
+	    idx = 99
+        print idx
+	cumulate[idx] += 1
+	
+    tmp = segments[0]
+    for i in range(100):
+	segments[i] -= tmp
     isAnalysing = 0
+    print segments
+    print cumulate
     print "finish analysing"
 
 #上传任务
@@ -286,9 +313,11 @@ def refresh():
     global proto
     global srcIP
     global dstIP
+    global segments
+    global cumulate
     if isAnalysing == 1:
         return jsonify(flag = 1, srcIP = {}, dstIP = {}, proto = {})
-    return jsonify(flag = 0, srcIP = srcIP, dstIP = dstIP, proto = proto)
+    return jsonify(flag = 0, srcIP = srcIP, dstIP = dstIP, proto = proto,segments = segments, cumulate = cumulate)
 
 @app.route('/downloadResult', methods=['GET'])
 def downloadResult():
