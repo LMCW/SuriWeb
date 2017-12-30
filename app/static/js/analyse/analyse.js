@@ -15,6 +15,7 @@ $(function () {
 		obj.appendChild(optionObj);  //添加到select
 	    }
         });
+	refresh();
     };
 
     window.onload = submit_form;
@@ -46,7 +47,7 @@ function refresh() {
     		alert("正在分析中");
     		return;
     	}
-	alert("分析结束");
+	alert("分析结果如图");
         var ys = {"udp":17,"tcp": 6};
     	if (!data.proto.hasOwnProperty(ys["tcp"]))
     	    data.proto[ys["tcp"]] = 0;
@@ -119,7 +120,7 @@ function refresh() {
 		//backgroundColor: 'rgba(0,0,0,0)'
             },
             title: {
-                text: '传输层协议'
+                text: '不同IP地址数'
             },
             tooltip: {
                 //headerFormat: '{series.name}<br>',
