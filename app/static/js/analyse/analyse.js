@@ -15,7 +15,7 @@ $(function () {
 		obj.appendChild(optionObj);  //添加到select
 	    }
         });
-	refresh();
+	//refresh();
     };
 
     window.onload = submit_form;
